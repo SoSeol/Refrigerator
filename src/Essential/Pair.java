@@ -1,11 +1,11 @@
 package Essential;
 
 /**
- * Replicates C++ std::pair
+ * C++ std::pair 비스무리한 것
  * @author a
  *
- * @param <T1> std::pair's first
- * @param <T2> std::pair's second
+ * @param <T1> std::pair first와 같음
+ * @param <T2> std::pair second와 같음
  * 
  */
 

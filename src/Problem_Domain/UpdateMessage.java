@@ -4,20 +4,25 @@ import java.util.Calendar;
 
 public class UpdateMessage extends Message
 {
-	public UpdateMessage(String detail, Calendar messageUntil)
+	
+	/**
+	 * 특정 종료일자를 지정할 경우 사용할 생성자
+	 * @param detail 메세지 내용
+	 * @param created 메세지 제작자
+	 * @param messageUntil 게시만료일자
+	 */
+	public UpdateMessage(String detail, String created, Calendar messageUntil)
 	{
-		super(MessageType.Update, detail, messageUntil);
+		super(detail, messageUntil, created);
 	}
 	
-	public UpdateMessage(String detail)
+	/**
+	 * 특정 종료일자를 지정하지 않을 경우 사용할 생성자
+	 * @param detail 메세지 내용
+	 * @param created 메세지 제작자
+	 */
+	public UpdateMessage(String detail, String created)
 	{
-		this(detail, getAfterDay(1));
-	}
-	
-	private static Calendar getAfterDay(int cnt)
-	{
-		Calendar date = Calendar.getInstance();
-		date.add(Calendar.DATE, cnt);
-		return date;
+		this(detail, created, getAfterDay());
 	}
 }

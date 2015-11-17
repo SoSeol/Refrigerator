@@ -10,10 +10,17 @@ public class User
 	private String name;
 	private String ID;
 	private byte[] PW;
-	private UserPrevilege previlege;
+	//private UserPrevilege previlege;
 	private Vector<Message> unreadMessages;
 	
-	protected User(String newName, String newID, String newPW, UserPrevilege prev)
+	/**
+	 * 사용자 생성자
+	 * @param newName 사용자 이름
+	 * @param newID 사용자 ID
+	 * @param newPW 사용자 비밀번호
+	 * @param prev 
+	 */
+	protected User(String newName, String newID, String newPW)
 	{
 		try
 		{
@@ -28,11 +35,12 @@ public class User
 		catch (NoSuchAlgorithmException e)	{ }
 	}
 	
-	public void changePassword(String newPW)
-	{
-		PW = hasher.digest(newPW.getBytes());
-	}
-	
+	/**
+	 * 새로 바꿀 비밀번호 문자열을 받아서 저장.
+	 * 비밀번호를 바꿀 떄 길이 체크는 다른 곳에서 해야 할지도?
+	 * @param newPW 새 비밀번호 문자열
+	 */
+	public void changePassword(String newPW) { PW = hasher.digest(newPW.getBytes()); }
 	public String getName() { return name; }
 	public String getID() { return ID; }
 	public boolean checkPassword(String str) { return PW == hasher.digest(str.getBytes()); }
@@ -46,6 +54,6 @@ public class User
 	
 	public String toString()
 	{
-		return "User " + name + "\n\tID" + ID + "\n\tPrevilege : " + previlege;
+		return "User " + name + "\n\tID" + ID;
 	}
 }

@@ -1,3 +1,5 @@
+/*
+
 package Problem_Domain;
 
 public enum MessageType
@@ -10,3 +12,5 @@ public enum MessageType
 		return "Update";
 	}
 }
+
+*/
