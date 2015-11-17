@@ -138,6 +138,10 @@ public class Administrator extends User {
 			UserList.createWarningMessage(WarningMessageType.ExistUser, this.getName());
 		}
 	}
+	public void updateUser(UserEditAction action,String id)
+	{
+		editUser(action,id);
+	}
 	
 	public void deleteOldMessages()
 	{
@@ -148,4 +152,5 @@ public class Administrator extends User {
 	{
 		return "Administrator, ID : " + getID() + ", Name : " + getName();
 	}
+
 }
