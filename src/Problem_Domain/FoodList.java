@@ -58,7 +58,7 @@ public class FoodList
 	 * @param tgtFoodName 업데이트 해당하는 음식 이름
 	 * @param operatorName 업데이트를 하는 관리자 이름
 	 */
-	private void createUpdateMessage(UpdateMessageType t, String tgtFoodName, String operatorName)
+	static void createUpdateMessage(UpdateMessageType t, String tgtFoodName, String operatorName)
 	{
 		UpdateMessage newMessage = null;
 		switch(t)
@@ -70,6 +70,26 @@ public class FoodList
 			break;
 		case Modification:
 			break;
+		default: break;
+		}
+		RefrigeratorSystem.getMessageList().add(newMessage);
+	}
+	
+	/**
+	 * warning 메세지 생성후 메세지 목록에 추가
+	 * @param t 워닝메세지 종류
+	 * @param FoodName 알람 대상 음식
+	 * @param tgtUserName 음식 넣은 사람
+	 */
+	static void createWarningMessage(WarningMessageType t, String FoodName, String tgtUserName)
+	{
+		WarningMessage newMessage = null;
+		switch(t)
+		{
+		case ForbiddenFood:
+			newMessage = new WarningMessage(FoodName+" is forbidden food",tgtUserName);
+			break;
+			
 		default: break;
 		}
 		RefrigeratorSystem.getMessageList().add(newMessage);
