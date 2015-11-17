@@ -7,6 +7,7 @@ public class UserList
 	private Vector<User> list;
 	public UserList() { list = new Vector<User>(); }
 	
+
 	/**
 	 * 리스트를 문자열로 변환해줌
 	 * @return 문자열화 된 리스트
@@ -32,6 +33,22 @@ public class UserList
 				return list.elementAt(i);
 		}
 		return null;
+	}
+	
+	/**
+	 * 리스트에서 해당하는 아이디를 찾아 유저 존재시 가진 유저의 인덱스 ,그렇지 않다면 -1 을 넘겨준다. 
+	 * @param ID
+	 * @return idx값
+	 */
+	public int checkIdx(String ID)
+	{
+		User tmp= checkID(ID);
+		//만약 이 ID를 가진 유저가 없다면 -1 return
+		if(tmp == null)
+		{
+			return -1;
+		}
+		return list.indexOf(tmp);
 	}
 	
 	/**
@@ -85,7 +102,7 @@ public class UserList
 	 * @param tgtUserName 업데이트 해당하는 사용자 이름
 	 * @param operatorName 업데이트를 하는 관리자 이름
 	 */
-	private void createUpdateMessage(UpdateMessageType t, String tgtUserName, String operatorName)
+	static void createUpdateMessage(UpdateMessageType t, String tgtUserName, String operatorName)
 	{
 		UpdateMessage newMessage = null;
 		switch(t)
@@ -96,6 +113,25 @@ public class UserList
 			newMessage = new UpdateMessage("User " + tgtUserName + "deleted by " + operatorName, operatorName);
 			break;
 		default: break;
+		}
+		RefrigeratorSystem.getMessageList().add(newMessage);
+	}
+	
+	/**
+	 * 워닝 메세지 생성 후 메세지 목록에 추가
+	 * @param t 워닝 메세지 타입
+	 * @param tgtUserName 메시지를 생성하게 한 장본인
+	 */
+	static void createWarningMessage(WarningMessageType t, String tgtUserName)
+	{
+		WarningMessage newMessage = null;
+		switch(t)
+		{
+		case ExistUser:
+			newMessage = new WarningMessage("User already Exist."+ "Try: "+tgtUserName, tgtUserName);
+			break;
+		default:
+			break;
 		}
 		RefrigeratorSystem.getMessageList().add(newMessage);
 	}

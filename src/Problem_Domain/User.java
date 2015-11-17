@@ -41,6 +41,11 @@ public class User
 	 * @param newPW 새 비밀번호 문자열
 	 */
 	public void changePassword(String newPW) { PW = hasher.digest(newPW.getBytes()); }
+	public void setName(String name){	this.name = name;}
+	public void setID(String ID){ this.ID = ID;}
+	public void setPW(String PW){
+		this.PW = hasher.digest(PW.getBytes());
+	}
 	public String getName() { return name; }
 	public String getID() { return ID; }
 	public boolean checkPassword(String str) { return PW == hasher.digest(str.getBytes()); }
