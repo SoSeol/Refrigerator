@@ -1,6 +1,7 @@
 package Problem_Domain;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Vector;
 
 public class FoodList
@@ -72,5 +73,30 @@ public class FoodList
 		default: break;
 		}
 		RefrigeratorSystem.getMessageList().add(newMessage);
+	}
+	
+	public void checkExpired()
+	{
+		for(Food tmp: list) //하나하나 들어감
+		{
+			WarningMessage msg = null;
+			if(tmp.isExpired())
+			{
+				msg	= new WarningMessage("Food expired : Name -> " + tmp.getName() +
+						", Location : " + (tmp.isFreezerItem()? "Freezer" : "Cooler") + 
+						", Row " + tmp.getLocation().first + ", Column " + tmp.getLocation().second, "System");
+			
+			}
+			else if(Calendar.getInstance().compareTo(tmp.getExpirationDate()) <= 3)
+			{
+				msg = new WarningMessage("Food near to expired in "+ Calendar.getInstance().compareTo(tmp.getExpirationDate()) + 
+						" days : Name -> " + tmp.getName() +
+						", Location : " + (tmp.isFreezerItem()? "Freezer" : "Cooler") + 
+						", Row " + tmp.getLocation().first + ", Column " + tmp.getLocation().second, "System");
+			}
+			
+			if(msg != null) 
+				RefrigeratorSystem.getMessageList().add(msg);
+		}
 	}
 }

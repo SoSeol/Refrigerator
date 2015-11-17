@@ -44,6 +44,7 @@ public class Food
 	public int getQuantity() { return quantity; }
 	public int getWeight() { return weight; }
 	public int getCalories() { return calories; }
+	public Calendar getExpirationDate() { return expirationDate; }
 	public boolean isFreezerItem() { return bFreezerItem; }
 	public void setQuantity(int newQ) { quantity = newQ; }
 	public void setWeight(int newW) { weight = newW; }

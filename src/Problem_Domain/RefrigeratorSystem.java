@@ -2,8 +2,8 @@ package Problem_Domain;
 
 public class RefrigeratorSystem
 {
-	private UserList ulist;
-	private FoodList flist;
+	private static UserList ulist;
+	private static FoodList flist;
 	private static MessageList mlist;
 	
 	public RefrigeratorSystem()
@@ -14,5 +14,6 @@ public class RefrigeratorSystem
 	}
 	
 	public static MessageList getMessageList() { return mlist; } 
-
+	public static UserList getUserList() { return ulist; }
+	public static FoodList getFoodList() { return flist; }
 }

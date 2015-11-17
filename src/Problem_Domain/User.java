@@ -36,8 +36,8 @@ public class User
 	}
 	
 	/**
-	 * 새로 바꿀 비밀번호 문자열을 받아서 저장.
-	 * 비밀번호를 바꿀 떄 길이 체크는 다른 곳에서 해야 할지도?
+	 * 새로 바꿀 비밀번호 문자열을 받아서 저장.<p>
+	 * 비밀번호를 바꿀 떄 길이 체크는 하지 않음
 	 * @param newPW 새 비밀번호 문자열
 	 */
 	public void changePassword(String newPW) { PW = hasher.digest(newPW.getBytes()); }

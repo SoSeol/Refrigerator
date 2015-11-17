@@ -1,4 +1,4 @@
-/*
+
 package Problem_Domain;
 
 public enum UserPrevilege
@@ -11,4 +11,3 @@ public enum UserPrevilege
 		return "Administrator";
 	}
 }
-*/

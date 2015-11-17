@@ -15,7 +15,7 @@ public class UserList
 	{
 		StringBuffer buf = new StringBuffer();
 		for(int i = 0; i < list.size(); ++i)
-			buf.append((i + 1) + list.elementAt(i).toString() + '\n');
+			buf.append((i + 1) + " : " + list.elementAt(i).toString() + '\n');
 		return buf.toString();
 	}
 	
@@ -57,6 +57,26 @@ public class UserList
 		User deleted = list.remove(idx);
 		createUpdateMessage(UpdateMessageType.Removal, deleted.getName(), operatorName);
 		deleted = null;
+	}
+	
+	/**
+	 * 수정 및 삭제를 위해 특정 위치에 있는 사용자 반환
+	 * @param idx 위치
+	 * @return 잘못된 위치 입력하면 null 반환, 정확한 위치 넣으면 해당 음식 반환
+	 */
+	public User elementAt(int idx)
+	{
+		if(idx < 0 || idx >= list.size()) return null;
+		return list.elementAt(idx);
+	}
+	
+	/**
+	 * 해당 위치에 있는 사용자 객체를 수정한 객체로 변경할 때 사용
+	 * @param usr
+	 */
+	public void replace(int idx, User usr)
+	{
+		list.set(idx, usr);
 	}
 		
 	/**
