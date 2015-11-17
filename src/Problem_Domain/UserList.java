@@ -77,6 +77,6 @@ public class UserList
 			break;
 		default: break;
 		}
-		RefrigeratorSystem.addMessage(newMessage);
+		RefrigeratorSystem.getMessageList().add(newMessage);
 	}
 }

@@ -13,6 +13,6 @@ public class RefrigeratorSystem
 		mlist = new MessageList();
 	}
 	
-	public static void addMessage(Message m) { mlist.add(m); }
+	public static MessageList getMessageList() { return mlist; } 
 
 }

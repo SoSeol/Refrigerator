@@ -54,23 +54,23 @@ public class FoodList
 	/**
 	 * 업데이트 메세지 생성 후 메세지 목록에 추가
 	 * @param t 업데이트 메세지 종류
-	 * @param tgtUserName 업데이트 해당하는 사용자 이름
+	 * @param tgtFoodName 업데이트 해당하는 음식 이름
 	 * @param operatorName 업데이트를 하는 관리자 이름
 	 */
-	private void createUpdateMessage(UpdateMessageType t, String tgtUserName, String operatorName)
+	private void createUpdateMessage(UpdateMessageType t, String tgtFoodName, String operatorName)
 	{
 		UpdateMessage newMessage = null;
 		switch(t)
 		{
 		case Addition:
-			newMessage = new UpdateMessage("New Food " + tgtUserName + "stored by " + operatorName, operatorName);
+			newMessage = new UpdateMessage("New Food " + tgtFoodName + "stored by " + operatorName, operatorName);
 		case Removal:
-			newMessage = new UpdateMessage("Food " + tgtUserName + "taken by " + operatorName, operatorName);
+			newMessage = new UpdateMessage("Food " + tgtFoodName + "taken by " + operatorName, operatorName);
 			break;
 		case Modification:
 			break;
 		default: break;
 		}
-		RefrigeratorSystem.addMessage(newMessage);
+		RefrigeratorSystem.getMessageList().add(newMessage);
 	}
 }
