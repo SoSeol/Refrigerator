@@ -2,6 +2,7 @@ package Problem_Domain;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Vector;
 
 public class User
@@ -60,5 +61,67 @@ public class User
 	public String toString()
 	{
 		return "User " + name + "\n\tID" + ID;
+	}
+	
+	/**
+	 * 음식 등록
+	 * @param newName
+	 * @param newQuantity
+	 * @param newWeight
+	 * @param newCalories
+	 * @param bFreezer
+	 * @param row
+	 * @param col
+	 * @param newExpirationDate
+	 */
+	public void registerItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
+	{
+		Food newfood = new Food(newName, col, col, col, bFreezer, col, col, newExpirationDate);
+		RefrigeratorSystem.getFoodList().add(newfood, this.getName());
+		FoodList.createUpdateMessage(UpdateMessageType.Addition, name, this.getName());
+	}
+	
+	
+	/**
+	 * 음식 삭제
+	 * @param idx 삭제하고자 하는 음식 인덱스
+	 */
+	public void DeleteItem(int idx)
+	{
+		RefrigeratorSystem.getFoodList().delete(idx, this.getName());
+	}
+	
+	/**
+	 * 푸드 리스트 출력
+	 */
+	public void searchItem()
+	{
+		FoodList flist = RefrigeratorSystem.getFoodList();
+		flist.showList();
+	}
+	
+	/**
+	 * 음식 등록을 위한 edit
+	 * @param newName
+	 * @param newQuantity
+	 * @param newWeight
+	 * @param newCalories
+	 * @param bFreezer
+	 * @param row
+	 * @param col
+	 * @param newExpirationDate
+	 */
+	public void editItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
+	{
+		registerItem(newName, col, col, col, bFreezer, col, col, newExpirationDate);
+	}
+	
+	/**
+	 * 음식 삭제를 위한 edit
+	 * @param idx
+	 */
+	public void editItem(int idx)
+	{
+		DeleteItem(idx);
 	}
 }
