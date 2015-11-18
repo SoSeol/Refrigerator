@@ -12,7 +12,7 @@ public class WarningMessage extends Message
 	 */
 	public WarningMessage(String detail, String created, Calendar until)
 	{
-		super(detail, until, created);
+		super(detail, created, until);
 	}
 	
 	/**
@@ -22,7 +22,18 @@ public class WarningMessage extends Message
 	 */
 	public WarningMessage(String detail, String created)
 	{
-		this(detail, created, getAfterDay());
+		super(detail, created);
+	}
+	
+	/**
+	 * WarningMessage 메세지 문자열로 변환
+	 * 변환 방식은 "[생성 일자/생성인] Warning : '메세지 내용'"
+	 */
+	public String toString()
+	{
+		String[] splitted = super.toString().split(" ");
+		return splitted[0] + "Warning : " + splitted[1];
+		
 	}
 	
 }

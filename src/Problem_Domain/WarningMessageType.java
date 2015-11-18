@@ -1,5 +1,5 @@
 package Problem_Domain;
 
 public enum WarningMessageType {
-	ExistUser, ForbiddenFood;
+	ExistUser, ForbiddenFood, FoodExpired, FoodNearExpiration;
 }

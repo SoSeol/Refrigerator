@@ -113,7 +113,6 @@ public class Administrator extends User {
 		}
 		
 		RefrigeratorSystem.getUserList().add(newUser, this.getName());
-		UserList.createUpdateMessage(UpdateMessageType.Addition, name, this.getName());
 	}
 	
 	/**

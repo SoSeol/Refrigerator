@@ -74,11 +74,17 @@ public class User
 	 * @param col
 	 * @param newExpirationDate
 	 */
-	public void registerItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
+	public boolean registerItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
 	{
 		Food newfood = new Food(newName, col, col, col, bFreezer, col, col, newExpirationDate);
+		if(newfood.isExpired())
+		{
+			WarningMessage msg = new WarningMessage(name + "tried to put in forbidden item \"" + newfood.getName() + '\"', "SYstem");
+			RefrigeratorSystem.getMessageList().add(msg);
+			return false;
+		}
 		RefrigeratorSystem.getFoodList().add(newfood, this.getName());
-		FoodList.createUpdateMessage(UpdateMessageType.Addition, name, this.getName());
+		return true;
 	}
 	
 	

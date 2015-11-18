@@ -13,7 +13,7 @@ public class UpdateMessage extends Message
 	 */
 	public UpdateMessage(String detail, String created, Calendar messageUntil)
 	{
-		super(detail, messageUntil, created);
+		super(detail, created, messageUntil);
 	}
 	
 	/**
@@ -23,6 +23,6 @@ public class UpdateMessage extends Message
 	 */
 	public UpdateMessage(String detail, String created)
 	{
-		this(detail, created, getAfterDay());
+		super(detail, created);
 	}
 }

@@ -12,6 +12,11 @@ public class FoodList
 	public FoodList()
 	{
 		prohibitedList = new ArrayList<String>();
+		prohibitedList.add("마리화나");
+		prohibitedList.add("본드");
+		prohibitedList.add("필로폰");
+		prohibitedList.add("대마초");
+		prohibitedList.add("청산가리");
 		list = new Vector<Food>();
 	}
 	
@@ -58,7 +63,7 @@ public class FoodList
 	 * @param tgtFoodName 업데이트 해당하는 음식 이름
 	 * @param operatorName 업데이트를 하는 관리자 이름
 	 */
-	static void createUpdateMessage(UpdateMessageType t, String tgtFoodName, String operatorName)
+	private void createUpdateMessage(UpdateMessageType t, String tgtFoodName, String operatorName)
 	{
 		UpdateMessage newMessage = null;
 		switch(t)
@@ -81,42 +86,38 @@ public class FoodList
 	 * @param FoodName 알람 대상 음식
 	 * @param tgtUserName 음식 넣은 사람
 	 */
-	static void createWarningMessage(WarningMessageType t, String FoodName, String tgtUserName)
+	private void createWarningMessage(WarningMessageType t, Food tgtFood, String tgtUserName)
 	{
 		WarningMessage newMessage = null;
 		switch(t)
 		{
-		case ForbiddenFood:
-			newMessage = new WarningMessage(FoodName+" is forbidden food",tgtUserName);
+		case FoodExpired:
+			newMessage= new WarningMessage("Food expired : Name -> " + tgtFood.getName() +
+			         						", Location : " + (tgtFood.isFreezerItem()? "Freezer" : "Cooler") + 
+			        						", Row " + tgtFood.getLocation().first + ", Column " + tgtFood.getLocation().second, tgtUserName);
 			break;
-			
+		case FoodNearExpiration:
+			newMessage = new WarningMessage("Food near to expired in "+ Calendar.getInstance().compareTo(tgtFood.getExpirationDate()) + 
+			           						" days : Name -> " + tgtFood.getName() + ", Location : " +
+			           						(tgtFood.isFreezerItem()? "Freezer" : "Cooler") + ", Row " + tgtFood.getLocation().first +
+			           						", Column " + tgtFood.getLocation().second, tgtUserName);
+			break;
 		default: break;
 		}
 		RefrigeratorSystem.getMessageList().add(newMessage);
 	}
 	
+	/**
+	 * 유통기한 지났거나 3일 이하로 남았는지 확인한 후 경고 메세지 제작.<p>
+	 */
 	public void checkExpired()
 	{
 		for(Food tmp: list) //하나하나 들어감
 		{
-			WarningMessage msg = null;
 			if(tmp.isExpired())
-			{
-				msg	= new WarningMessage("Food expired : Name -> " + tmp.getName() +
-						", Location : " + (tmp.isFreezerItem()? "Freezer" : "Cooler") + 
-						", Row " + tmp.getLocation().first + ", Column " + tmp.getLocation().second, "System");
-			
-			}
+				createWarningMessage(WarningMessageType.FoodExpired, tmp, "System");
 			else if(Calendar.getInstance().compareTo(tmp.getExpirationDate()) <= 3)
-			{
-				msg = new WarningMessage("Food near to expired in "+ Calendar.getInstance().compareTo(tmp.getExpirationDate()) + 
-						" days : Name -> " + tmp.getName() +
-						", Location : " + (tmp.isFreezerItem()? "Freezer" : "Cooler") + 
-						", Row " + tmp.getLocation().first + ", Column " + tmp.getLocation().second, "System");
-			}
-			
-			if(msg != null) 
-				RefrigeratorSystem.getMessageList().add(msg);
+				createWarningMessage(WarningMessageType.FoodNearExpiration, tmp, "System");
 		}
 	}
 }

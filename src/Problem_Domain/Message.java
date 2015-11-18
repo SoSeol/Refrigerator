@@ -16,7 +16,7 @@ public class Message
 	 * @param until 게시 만료일자
 	 * @param created 메세지 생성한 사용자
 	 */
-	protected Message(String detail, Calendar until, String created)
+	protected Message(String detail, String created, Calendar until)
 	{
 		//messageType = type;
 		messageDetail = detail;
@@ -25,11 +25,16 @@ public class Message
 		createdUserName = created;
 	}
 	
+	protected Message(String detail, String created)
+	{
+		this(detail, created, getAfterDay());
+	}
+	
 	public boolean isExpired() { return messageUntil.before(Calendar.getInstance()); }
-	public String getCreatedUserName() { return createdUserName; }
-	public Calendar getCreatedDate() { return createdDate; }
-	public Calendar getEndDate() { return messageUntil; }
-	public String getMessageDetail() { return messageDetail; }
+	protected String getCreatedUserName() { return createdUserName; }
+	protected Calendar getCreatedDate() { return createdDate; }
+	protected Calendar getEndDate() { return messageUntil; }
+	protected String getMessageDetail() { return messageDetail; }
 
 	
 	/**
@@ -37,7 +42,7 @@ public class Message
 	 * @param cnt 몇일 후 지정
 	 * @return 계산한 날짜
 	 */
-	protected static Calendar getAfterDay(int cnt)
+	private static Calendar getAfterDay(int cnt)
 	{
 		Calendar date = Calendar.getInstance();
 		date.add(Calendar.DATE, cnt);
@@ -48,5 +53,14 @@ public class Message
 	 * 기본 만료일 후의 날짜를 계산해서 반환함
 	 * @return 기본 만료일 후의 날짜
 	 */
-	protected static Calendar getAfterDay() { return getAfterDay(DEFAULT_EXPIRE_DATE); }
+	private static Calendar getAfterDay() { return getAfterDay(DEFAULT_EXPIRE_DATE); }
+	
+	/**
+	 * 메세지 문자열로 변환<p>
+	 * 변환 방식은 "[생성일자/생성인] '메세지 내용'"
+	 */
+	public String toString()
+	{
+		return '[' + getCreatedDate().toString() + '/' + getCreatedUserName() + "] " + getMessageDetail();
+	}
 }
