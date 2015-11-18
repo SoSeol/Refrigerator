@@ -143,9 +143,13 @@ public class Administrator extends User {
 		editUser(action,id);
 	}
 	
+	/**
+	 * 기한이 다 된 메세지를 삭제함.
+	 */
 	public void deleteOldMessages()
 	{
-		
+		MessageList mlist = RefrigeratorSystem.getMessageList();
+		mlist.checkOutofDate();
 	}
 	
 	public String toString()

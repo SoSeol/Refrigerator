@@ -15,12 +15,18 @@ public class MessageList
 		list.add(m);
 	}
 	
+	/**
+	 * 기한이 지난 메세지를 삭제함.
+	 */
 	public void checkOutofDate()
 	{
 		for(int i = 0; i < list.size(); ++i)
 		{
-			if(list.elementAt(i).isExpired()) 
-				; //할 일 넣어야 됨
+			if(list.elementAt(i).isExpired())
+			{
+				list.remove(i);
+			}
+				
 		}
 	}
 	
