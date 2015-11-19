@@ -5,14 +5,19 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Vector;
 
+import Essential.Pair;
+
 public class User
 {
 	MessageDigest hasher;		//메세지 암호화 위한 변수
 	private String name;
 	private String ID;
 	private byte[] PW;
-	//private UserPrevilege previlege;
 	private Vector<Message> unreadMessages;
+	private enum FoodEditAction
+	{
+		Modify, Delete
+	}
 	
 	/**
 	 * 사용자 생성자
@@ -74,7 +79,7 @@ public class User
 	 * @param col
 	 * @param newExpirationDate
 	 */
-	public boolean registerItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
+	private boolean registerItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
 	{
 		Food newfood = new Food(newName, col, col, col, bFreezer, col, col, newExpirationDate);
 		if(newfood.isExpired())
@@ -92,42 +97,79 @@ public class User
 	 * 음식 삭제
 	 * @param idx 삭제하고자 하는 음식 인덱스
 	 */
-	public void DeleteItem(int idx)
+	private void DeleteItem(int idx)
 	{
 		RefrigeratorSystem.getFoodList().delete(idx, this.getName());
+	}
+	
+	private void ModifyItem(FoodEditType type, int idx, String editData)
+	{
+		Food tgt = RefrigeratorSystem.getFoodList().elementAt(idx);
+		switch(type)
+		{
+			case FreezerCooler:
+				switch(editData)
+				{
+				case "Freezer":
+					if(!tgt.isFreezerItem()) tgt.toggleFreezerCooler();
+					break;
+				case "Cooler":
+					if(tgt.isFreezerItem()) tgt.toggleFreezerCooler();
+					break;
+				}
+				break;
+			case Location:
+				String[] sp = editData.split(",");
+				tgt.setLocation(Integer.parseInt(sp[0]), Integer.parseInt(sp[1]));
+				break;
+			case Quantity:
+				tgt.setQuantity(Integer.parseInt(editData));
+				break;
+			case Weight:
+				tgt.setWeight(Integer.parseInt(editData));
+				break;
+		}
+		RefrigeratorSystem.getFoodList().replace(idx, tgt, type, getName());
+	}
+	
+	public void editItem(FoodEditAction act, FoodEditType type, int idx, String str	)
+	{
+		switch(act)
+		{
+		case Modify:
+			ModifyItem(type, idx, str);
+		case Delete:
+			DeleteItem(idx);
+		}
+	}
+	
+	public boolean UpdateItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
+	{
+		return registerItem(newName, newQuantity, newWeight, newCalories, bFreezer, row, col, newExpirationDate);
+	}
+	
+	public boolean UpdateItem(FoodEditAction act, FoodEditType type, int idx, String str)
+	{
+		editItem(act, type, idx, str);
+		return true;
 	}
 	
 	/**
 	 * 푸드 리스트 출력
 	 */
-	public void searchItem()
+	public String searchItem()
 	{
 		FoodList flist = RefrigeratorSystem.getFoodList();
-		flist.showList();
+		return flist.showList();
 	}
 	
 	/**
-	 * 음식 등록을 위한 edit
-	 * @param newName
-	 * @param newQuantity
-	 * @param newWeight
-	 * @param newCalories
-	 * @param bFreezer
-	 * @param row
-	 * @param col
-	 * @param newExpirationDate
+	 * 고칠 내용 종류, 리스트 위치, 고칠 내용을 받아 해당 음식 정보 수정
+	 * @param act 종류.  FreezerCooler / Location / Quantity / Weight
+	 * @param idx 해당 음식 위치
+	 * @param str 고칠 내용
 	 */
-	public void editItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
-	{
-		registerItem(newName, col, col, col, bFreezer, col, col, newExpirationDate);
-	}
 	
-	/**
-	 * 음식 삭제를 위한 edit
-	 * @param idx
-	 */
-	public void editItem(int idx)
-	{
-		DeleteItem(idx);
-	}
+	
+	
 }

@@ -1,8 +1,16 @@
 package Problem_Domain;
 
-import java.util.Scanner;
-
 public class Administrator extends User {
+	
+	private enum UserEditAction
+	{
+		Modify, Delete;
+	}
+	
+	private enum UserEditType
+	{
+		ID, PW, Name;
+	}
 	
 	public Administrator(String newName, String newID, String newPW)
 	{
@@ -19,17 +27,16 @@ public class Administrator extends User {
 	 * @param action 선택 종류
 	 * @param name 수정하고 싶은 유저 이름 설정
 	 */
-	private void editUser(UserEditAction action,String id)
+	private boolean editUser(UserEditAction action, UserEditType type, String id, String editData)
 	{
-	     switch(action)
-	     {
-	     case Modify:
-	    	 ModifyUser(id);
-	    	 break;
-	     case Delete:
-	    	 DeleteUser(id);
-	    	 break;
-	     }
+		switch(action)
+		{
+		case Modify:
+			return ModifyUser(type, id, editData);
+	    case Delete:
+	    	return DeleteUser(id);
+	    default: return false;
+	    }
 	}
 	
 	/**
@@ -51,47 +58,31 @@ public class Administrator extends User {
 	
 	/**
 	 * 사용자의 입력을 받아 유저 수정.
+	 * @param type PW / Name 변경
 	 * @param id 수정하고자 하는 유저 id
+	 * @param editData 수정할 데이터 내용
 	 */
-	private void ModifyUser(String id)
+	private boolean ModifyUser(UserEditType type, String id, String editData)
 	{
-		UserList ulist = RefrigeratorSystem.getUserList();
-		User target = ulist.checkID(id);
-		String changed;
-		
-		//유저 존재 하지 않을 때.
-		if(target == null)
-			return;
-		
-		System.out.println("-----Menu-----");
-		System.out.println("1. modify id");
-		System.out.println("2. modify pw");
-		System.out.println("3. modify name");
-		System.out.print(">");
-		
-		Scanner input = new Scanner(System.in);
-		int choice = input.nextInt();
-		switch(choice)
+		User target = RefrigeratorSystem.getUserList().checkID(id);
+		int idx = RefrigeratorSystem.getUserList().checkIdx(id);
+		switch(type)
 		{
-		case 1:
-			System.out.print("input chaged id: ");
-			changed = input.nextLine();
-			target.setID(changed);
+		case ID:
+			if(RefrigeratorSystem.getUserList().checkID(editData) != null)
+				return false;
+			target.setID(editData);
+		case PW:
+			target.changePassword(editData);
 			break;
-		case 2:
-			System.out.print("input chaged pw: ");
-			changed = input.nextLine();
-			target.setPW(changed);
-			break;
-		case 3:
-			System.out.print("input changed name: ");
-			changed = input.nextLine();
-			target.setName(changed);
-			break;
-		default:
+		case Name:
+			target.setName(editData);
 			break;
 		}
+		RefrigeratorSystem.getUserList().replace(idx, target);
+		return true;
 	}
+	
 	/**
 	 * 유저 등록휴 메세지 출력
 	 * @param prev 등록하는 유저 타입
@@ -116,30 +107,30 @@ public class Administrator extends User {
 	}
 	
 	/**
-	 * 업데이트 유저( 사용자 등록  )
+	 * 업데이트 유저( 사용자 등록 )
 	 * 만약 이미 ID존재시, Alarm.
 	 * @param prev 권한
 	 * @param name 이름
 	 * @param id
 	 * @param pw
 	 */
-	public void updateUser(UserPrevilege prev, String name, String id, String pw)
+	public boolean UpdateUser(UserPrevilege prev, String name, String id, String pw)
 	{
 		// 유저가 존재하는지 checking
 		UserList list = RefrigeratorSystem.getUserList();
-		if(list.checkID(id)!= null)
+		if(list.checkID(id) == null)
 		{
 			registerUser(prev, name, id, pw);
+			return true;
 		}
-		// 등록하려는 유저가 이미 존재한다면 워닝 메세지
-		else
-		{
-			UserList.createWarningMessage(WarningMessageType.ExistUser, this.getName());
-		}
+		// 등록하려는 유저가 이미 존재한다면 false 반환
+		UserList.createWarningMessage(WarningMessageType.ExistUser, "System");
+		return false;
 	}
-	public void updateUser(UserEditAction action,String id)
+	
+	public boolean UpdateUser(UserEditAction action, UserEditType type, String id, String editData)
 	{
-		editUser(action,id);
+		return editUser(action, type, id, editData);
 	}
 	
 	/**

@@ -12,6 +12,7 @@ public class FoodList
 	public FoodList()
 	{
 		prohibitedList = new ArrayList<String>();
+		prohibitedList.add("마약");
 		prohibitedList.add("마리화나");
 		prohibitedList.add("본드");
 		prohibitedList.add("필로폰");
@@ -30,7 +31,7 @@ public class FoodList
 	{
 		StringBuffer buf = new StringBuffer();
 		for(int i = 0; i < list.size(); ++i)
-			buf.append((i + 1) + list.elementAt(i).toString() + '\n');
+			buf.append((i + 1) + " : " + list.elementAt(i).toString() + '\n');
 		return buf.toString();
 	}
 	
@@ -57,6 +58,14 @@ public class FoodList
 		deleted = null;
 	}
 	
+	public void replace(int idx, Food newFood, FoodEditType act, String operatorName)
+	{
+		list.set(idx, newFood);
+		createUpdateMessage(act, newFood.getName(), operatorName);
+	}
+	
+	public Food elementAt(int idx) { return list.elementAt(idx); }
+	
 	/**
 	 * 업데이트 메세지 생성 후 메세지 목록에 추가
 	 * @param t 업데이트 메세지 종류
@@ -73,11 +82,34 @@ public class FoodList
 		case Removal:
 			newMessage = new UpdateMessage("Food " + tgtFoodName + "taken by " + operatorName, operatorName);
 			break;
-		case Modification:
-			break;
 		default: break;
 		}
-		RefrigeratorSystem.getMessageList().add(newMessage);
+		if(null != newMessage) RefrigeratorSystem.getMessageList().add(newMessage);
+	}
+		
+	/**
+	 * 수정 관련 업데이트 메세지 생성 후 메세지 목록에 추가
+	 * @param act 수정한 항목
+	 * @param tgtFoodName 수정한 음식명
+	 * @param operatorName 수정한 사람 이름
+	 */
+	private void createUpdateMessage(FoodEditType type, String tgtFoodName, String operatorName)
+	{
+		UpdateMessage newMessage = null;
+		switch(type)
+		{
+		case FreezerCooler:
+		case Location:
+			newMessage = new UpdateMessage("Food " + tgtFoodName + " was moved by " + operatorName, operatorName);
+			break;
+		case Weight:
+			newMessage = new UpdateMessage("Food " + tgtFoodName + "'s weight was modified by " + operatorName, operatorName);
+			break;
+		case Quantity:
+			newMessage = new UpdateMessage("Food " + tgtFoodName + "'s quantity was modified by " + operatorName, operatorName);
+			break;
+		}
+		if(null != newMessage) RefrigeratorSystem.getMessageList().add(newMessage);
 	}
 	
 	/**
@@ -102,9 +134,12 @@ public class FoodList
 			           						(tgtFood.isFreezerItem()? "Freezer" : "Cooler") + ", Row " + tgtFood.getLocation().first +
 			           						", Column " + tgtFood.getLocation().second, tgtUserName);
 			break;
+		case ForbiddenFood:
+			newMessage = new WarningMessage("Prohibited food in refrigerator : " + tgtFood.getName(), tgtUserName); 
 		default: break;
 		}
-		RefrigeratorSystem.getMessageList().add(newMessage);
+		if(newMessage != null)
+			RefrigeratorSystem.getMessageList().add(newMessage);
 	}
 	
 	/**
@@ -118,6 +153,15 @@ public class FoodList
 				createWarningMessage(WarningMessageType.FoodExpired, tmp, "System");
 			else if(Calendar.getInstance().compareTo(tmp.getExpirationDate()) <= 3)
 				createWarningMessage(WarningMessageType.FoodNearExpiration, tmp, "System");
+		}
+	}
+	
+	public void checkFoodName()
+	{
+		for(Food tmp : list)
+		{
+			if(tmp.isProhibited())
+				createWarningMessage(WarningMessageType.ForbiddenFood, tmp, "System");
 		}
 	}
 }

@@ -4,8 +4,7 @@ import java.util.Calendar;
 import Essential.Pair;
 
 public class Food
-{
-	
+{	
 	private String name;
 	private int quantity;
 	private int weight;
@@ -38,7 +37,7 @@ public class Food
 		insertedDate = Calendar.getInstance();
 	}
 	
-	public boolean isProhibited() { return FoodList.getProhibitedList().indexOf(name) == -1; }
+	public boolean isProhibited() { return FoodList.getProhibitedList().indexOf(name) != -1; }
 	public boolean isExpired() { return Calendar.getInstance().before(expirationDate); }
 	public String getName() { return name; }
 	public int getQuantity() { return quantity; }
