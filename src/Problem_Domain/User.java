@@ -13,11 +13,7 @@ public class User
 	private String name;
 	private String ID;
 	private byte[] PW;
-	private Vector<Message> unreadMessages;
-	private enum FoodEditAction
-	{
-		Modify, Delete
-	}
+	
 	
 	/**
 	 * 사용자 생성자
@@ -58,19 +54,7 @@ public class User
 		return PW.equals(hasher.digest(inputPW.getBytes()));
 	}
 	
-	public String checkMessage()
-	{
-		StringBuffer buf = new StringBuffer();
-		for(int i = 1; i <= unreadMessages.size(); ++i)
-			buf.append(i + " : " + unreadMessages.get(i - 1));
-		return buf.toString();
-	}
-/*	
-	public String toString()
-	{
-		return "User : " + name + "\tID : " + ID;
-	}
-*/
+	
 	@Override
 	public String toString()
 	{
@@ -88,16 +72,19 @@ public class User
 	 * @param col
 	 * @param newExpirationDate
 	 */
-	private boolean registerItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
+	
+	private boolean registerFood(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, String newfloor, Calendar newExpirationDate)
 	{
-		Food newfood = new Food(newName, col, col, col, bFreezer, col, col, newExpirationDate);
-		if(newfood.isExpired())
+		
+		Food newfood = new Food(newName, newQuantity, newWeight, newCalories, bFreezer, newfloor , newExpirationDate);
+		if(newfood.isProhibited())
 		{
-			WarningMessage msg = new WarningMessage(name + "tried to put in forbidden item \"" + newfood.getName() + '\"', "SYstem");
+			WarningMessage msg = new WarningMessage(name + "tried to put in forbidden item \"" + newfood.getName() + '\"', "System");
 			RefrigeratorSystem.getMessageList().add(msg);
 			return false;
 		}
-		RefrigeratorSystem.getFoodList().add(newfood, this.getName());
+		
+		RefrigeratorSystem.getFoodList().updateList(newfood, UpdateUserAction.REGISTER);
 		return true;
 	}
 	
@@ -106,13 +93,17 @@ public class User
 	 * 음식 삭제
 	 * @param idx 삭제하고자 하는 음식 인덱스
 	 */
-	private void DeleteItem(int idx)
+	private void deleteFood(int idx)
 	{
-		RefrigeratorSystem.getFoodList().delete(idx, this.getName());
+		
+		Food delete_food;
+		delete_food = RefrigeratorSystem.getFoodList().elementAt(idx);
+		RefrigeratorSystem.getFoodList().updateList(delete_food,UpdateUserAction.DELETE);
 	}
 	
-	private void ModifyItem(FoodEditType type, int idx, String editData)
+	private void modifyFood(FoodEditType type, int idx, String editData)
 	{
+		Food modify_food = RefrigeratorSystem.getFoodList().elementAt(idx);
 		Food tgt = RefrigeratorSystem.getFoodList().elementAt(idx);
 		switch(type)
 		{
@@ -128,8 +119,7 @@ public class User
 				}
 				break;
 			case Location:
-				String[] sp = editData.split(",");
-				tgt.setLocation(Integer.parseInt(sp[0]), Integer.parseInt(sp[1]));
+				tgt.setFloor(editData);
 				break;
 			case Quantity:
 				tgt.setQuantity(Integer.parseInt(editData));
@@ -138,29 +128,8 @@ public class User
 				tgt.setWeight(Integer.parseInt(editData));
 				break;
 		}
-		RefrigeratorSystem.getFoodList().replace(idx, tgt, type, getName());
-	}
+		RefrigeratorSystem.getFoodList().updateList(modify_food, UpdateUserAction.EDIT);
 	
-	public void editItem(FoodEditAction act, FoodEditType type, int idx, String str	)
-	{
-		switch(act)
-		{
-		case Modify:
-			ModifyItem(type, idx, str);
-		case Delete:
-			DeleteItem(idx);
-		}
-	}
-	
-	public boolean UpdateItem(String newName, int newQuantity, int newWeight, int newCalories, boolean bFreezer, int row, int col, Calendar newExpirationDate)
-	{
-		return registerItem(newName, newQuantity, newWeight, newCalories, bFreezer, row, col, newExpirationDate);
-	}
-	
-	public boolean UpdateItem(FoodEditAction act, FoodEditType type, int idx, String str)
-	{
-		editItem(act, type, idx, str);
-		return true;
 	}
 	
 	/**
