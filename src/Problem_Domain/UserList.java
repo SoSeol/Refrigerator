@@ -1,12 +1,17 @@
 package Problem_Domain;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Vector;
 
 public class UserList
 {
 	private Vector<User> list;
-	public UserList() { list = new Vector<User>(); }
-	
+	public UserList() { list = new Vector<User>(); }	
 
 	/**
 	 * 리스트를 문자열로 변환해줌
@@ -16,7 +21,7 @@ public class UserList
 	{
 		StringBuffer buf = new StringBuffer();
 		for(int i = 0; i < list.size(); ++i)
-			buf.append((i + 1) + " : " + list.elementAt(i).toString() + '\n');
+			buf.append((i + 1) + " | " + list.elementAt(i).toString() + "\n");
 		return buf.toString();
 	}
 	
@@ -59,9 +64,13 @@ public class UserList
 	public void add(User newUser, String operatorName)
 	{
 		//해당 ID가 존재할 경우 예외를 던지는데 예외 새로 만들어 줘야 함
-		if(checkID(newUser.getID()) != null) ; 
-		list.add(newUser);
-		createUpdateMessage(UpdateMessageType.Addition, newUser.getName(), operatorName);
+		if(checkID(newUser.getID()) != null) { 
+			list.add(newUser);
+			createUpdateMessage(UpdateMessageType.Addition, newUser.getName(), operatorName);
+		}
+		else
+			System.out.println("ID exists!");
+		
 	}
 	
 	/**
@@ -95,13 +104,34 @@ public class UserList
 	{
 		list.set(idx, usr);
 	}
-		
+	
+	
+	private void createUpdateMessage(UpdateMessageType t, String tgtUserName, String operatorName)
+	{
+		UpdateMessage newMessage = null;
+		switch(t)
+		{
+		case Addition:
+			newMessage = new UpdateMessage("New User " + tgtUserName + "added by " + operatorName, operatorName);
+			break;
+		case Modification:
+			newMessage = new UpdateMessage("User " + tgtUserName + "modified by " + operatorName, operatorName);
+			break;
+		case Removal:
+			newMessage = new UpdateMessage("User " + tgtUserName + "deleted by " + operatorName, operatorName);
+			break;
+		default: break;
+		}
+		RefrigeratorSystem.getMessageList().add(newMessage);
+	}
+	
+	
 	/**
 	 * 업데이트 메세지 생성 후 메세지 목록에 추가
 	 * @param t 업데이트 메세지 종류
 	 * @param tgtUserName 업데이트 해당하는 사용자 이름
 	 * @param operatorName 업데이트를 하는 관리자 이름
-	 */
+	 *
 	static void createUpdateMessage(UpdateMessageType t, String tgtUserName, String operatorName)
 	{
 		UpdateMessage newMessage = null;
@@ -116,6 +146,7 @@ public class UserList
 		}
 		RefrigeratorSystem.getMessageList().add(newMessage);
 	}
+	*/
 	
 	/**
 	 * 워닝 메세지 생성 후 메세지 목록에 추가

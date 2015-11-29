@@ -33,7 +33,6 @@ public class User
 			// 암호화 초기화.
 			// 자세한 사용방법은 https://docs.oracle.com/javase/8/docs/api/java/security/MessageDigest.html 참고 바람.
 			hasher = MessageDigest.getInstance("SHA-256");
-
 			name = newName;
 			ID = newID;
 			PW = hasher.digest(newPW.getBytes());
@@ -54,7 +53,11 @@ public class User
 	}
 	public String getName() { return name; }
 	public String getID() { return ID; }
-	public boolean checkPassword(String str) { return PW == hasher.digest(str.getBytes()); }
+	//public boolean checkPassword(String str) { return PW == hasher.digest(str.getBytes()); }
+	public boolean checkPassword(String inputPW) {
+		return PW.equals(hasher.digest(inputPW.getBytes()));
+	}
+	
 	public String checkMessage()
 	{
 		StringBuffer buf = new StringBuffer();
@@ -62,10 +65,16 @@ public class User
 			buf.append(i + " : " + unreadMessages.get(i - 1));
 		return buf.toString();
 	}
-	
+/*	
 	public String toString()
 	{
-		return "User " + name + "\n\tID" + ID;
+		return "User : " + name + "\tID : " + ID;
+	}
+*/
+	@Override
+	public String toString()
+	{
+		return name+" ("+ID+")";		
 	}
 	
 	/**

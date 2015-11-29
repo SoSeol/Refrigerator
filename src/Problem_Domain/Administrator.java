@@ -16,11 +16,17 @@ public class Administrator extends User {
 	{
 		super(newName, newID, newPW);
 	}
-		
+/*		
 	public String searchUser()
 	{		
 		return RefrigeratorSystem.getUserList().showList();
 	}
+*/	
+	public String searchUser(UserList list)
+	{		
+		return list.showList();
+	}
+	
 	
 	/**
 	 *  유저 엑션에 따라 유저 리스트에서 modify 할지, delete 할지 결정함.
@@ -81,6 +87,22 @@ public class Administrator extends User {
 		}
 		RefrigeratorSystem.getUserList().replace(idx, target);
 		return true;
+	}
+	
+	
+	public User registerUser(int authority, String name, String ID, String PW) {
+		
+		User newUser = null;
+		
+		switch(authority) {
+		case 0:
+			newUser = new NormalUser(name, ID, PW);
+			break;
+		case 1:
+			newUser = new Administrator(name, ID, PW);
+			break;
+		}
+		return newUser;
 	}
 	
 	/**
