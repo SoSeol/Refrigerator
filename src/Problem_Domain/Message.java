@@ -7,8 +7,8 @@ public class Message
 	private final static byte DEFAULT_EXPIRE_DATE = 3;
 	private String messageDetail;
 	private Calendar createdDate;
-	private Calendar messageUntil;
-	private String createdUserName;
+	private Calendar expiredDate;
+	private String createdBy;
 	
 	/**
 	 * 皋技瘤 按眉 积己磊.
@@ -18,11 +18,10 @@ public class Message
 	 */
 	protected Message(String detail, String created, Calendar until)
 	{
-		//messageType = type;
 		messageDetail = detail;
 		createdDate = Calendar.getInstance();
-		messageUntil = until;
-		createdUserName = created;
+		expiredDate = until;
+		createdBy = created;
 	}
 	
 	protected Message(String detail, String created)
@@ -30,10 +29,10 @@ public class Message
 		this(detail, created, getAfterDay());
 	}
 	
-	public boolean isExpired() { return messageUntil.before(Calendar.getInstance()); }
-	protected String getCreatedUserName() { return createdUserName; }
+	public boolean isExpired() { return expiredDate.before(Calendar.getInstance()); }
+	protected String getcreatedBy() { return createdBy; }
 	protected Calendar getCreatedDate() { return createdDate; }
-	protected Calendar getEndDate() { return messageUntil; }
+	protected Calendar getEndDate() { return expiredDate; }
 	protected String getMessageDetail() { return messageDetail; }
 
 	
@@ -61,6 +60,6 @@ public class Message
 	 */
 	public String toString()
 	{
-		return '[' + getCreatedDate().toString() + '/' + getCreatedUserName() + "] " + getMessageDetail();
+		return '[' + getCreatedDate().toString() + '/' + getcreatedBy() + "] " + getMessageDetail();
 	}
 }
